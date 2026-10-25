@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<h2>Subir archivo</h2>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button>Subir</button></form>
+
+<h2>Tus archivos</h2>
+{% if archivos %}
+<table>
+<tr><th>Nombre</th><th>Tamaño</th><th>Subido</th><th>Acciones</th></tr>
+{% for a in archivos %}
+<tr>
+  <td>{{ a.nombre }}</td>
+  <td>{{ a.tamano|filesizeformat }}</td>
+  <td>{{ a.subido|date:"d/m/Y H:i" }}</td>
+  <td>
+    <a href="{% url 'descargar' a.pk %}">Descargar</a>
+    <form class="inline" method="post" action="{% url 'compartir' a.pk %}">{% csrf_token %}
+      <button>{% if a.compartido %}Dejar de compartir{% else %}Compartir{% endif %}</button>
+    </form>
+    <form class="inline" method="post" action="{% url 'eliminar' a.pk %}" onsubmit="return confirm('¿Eliminar este archivo?')">{% csrf_token %}
+      <button>Eliminar</button>
+    </form>
+    {% if a.compartido %}<br><small>Enlace: {{ request.scheme }}://{{ request.get_host }}{% url 'publico' a.token %}</small>{% endif %}
+  </td>
+</tr>
+{% endfor %}
+</table>
+{% else %}<p>Aún no has subido archivos.</p>{% endif %}
+{% endblock %}

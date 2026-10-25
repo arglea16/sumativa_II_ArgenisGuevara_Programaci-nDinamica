@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mis archivos</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:800px;margin:2rem auto;padding:0 1rem}
+  table{width:100%;border-collapse:collapse}
+  td,th{padding:.5rem;border-bottom:1px solid #ddd;text-align:left}
+  .msg{background:#e6f4ea;padding:.5rem 1rem;border-radius:6px}
+  form.inline{display:inline}
+</style>
+</head>
+<body>
+<h1>Mis archivos</h1>
+{% if user.is_authenticated %}
+<p>Hola, {{ user.username }}
+<form class="inline" method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Salir</button></form></p>
+{% endif %}
+{% for m in messages %}<p class="msg">{{ m }}</p>{% endfor %}
+{% block contenido %}{% endblock %}
+</body>
+</html>
